@@ -47,7 +47,7 @@ export default class WeekView extends Component {
 
   generateTimes = () => {
     const times = [];
-    for (let i = 18; i < 35; i += 1) {
+    for (let i = 16; i < 35; i += 1) {
       const minutes = i % 2 === 0 ? '00' : '30';
       const hour = Math.floor(i / 2);
       const time = `${hour}:${minutes}`;
