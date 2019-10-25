@@ -95,7 +95,7 @@ class Events extends Component {
           && previousEvent.style.top + previousEvent.style.height >= style.top;
           if (foundDuplicate) {
             numberOfDuplicate += 1;
-            style.left = 5 + (itemWidth / numberOfDuplicate);
+            style.left = 1 + (itemWidth / numberOfDuplicate);
             style.width = itemWidth / numberOfDuplicate;
             previousEvent.style.width = itemWidth / numberOfDuplicate;
           }
