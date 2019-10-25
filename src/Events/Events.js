@@ -11,7 +11,7 @@ import Event from '../Event/Event';
 import styles, { CONTENT_OFFSET } from './Events.styles';
 
 const { width: screenWidth } = Dimensions.get('window');
-const TIME_LABELS_COUNT = 48;
+const TIME_LABELS_COUNT = 35;
 const MINUTES_IN_HOUR = 60;
 const MINUTES_IN_DAY = MINUTES_IN_HOUR * 24;
 const ROW_HEIGHT = 40;
@@ -95,7 +95,7 @@ class Events extends Component {
           && previousEvent.style.top + previousEvent.style.height >= style.top;
           if (foundDuplicate) {
             numberOfDuplicate += 1;
-            style.left = 1 + (itemWidth / numberOfDuplicate);
+            style.left = 5 + (itemWidth / numberOfDuplicate);
             style.width = itemWidth / numberOfDuplicate;
             previousEvent.style.width = itemWidth / numberOfDuplicate;
           }
