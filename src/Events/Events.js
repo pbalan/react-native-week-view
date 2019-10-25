@@ -11,7 +11,7 @@ import Event from '../Event/Event';
 import styles, { CONTENT_OFFSET } from './Events.styles';
 
 const { width: screenWidth } = Dimensions.get('window');
-const TIME_LABELS_COUNT = 10;
+const TIME_LABELS_COUNT = 8;
 const MINUTES_IN_HOUR = 60;
 const MINUTES_IN_DAY = MINUTES_IN_HOUR * 24;
 const ROW_HEIGHT = 40;
@@ -67,7 +67,7 @@ class Events extends Component {
     const startMinutes = moment(item.startDate).minutes();
     const totalStartMinutes = (startHours * MINUTES_IN_HOUR) + startMinutes;
     const topOffset = (totalStartMinutes * CONTENT_HEIGHT) / MINUTES_IN_DAY;
-    const height = (moment(item.endDate).diff(item.startDate, 'minutes') * CONTENT_HEIGHT) / MINUTES_IN_DAY;
+    const height = (moment(item.endDate).diff(item.startDate, 'minutes') * 48) / MINUTES_IN_DAY;
     const width = this.getEventItemWidth();
 
     return {
