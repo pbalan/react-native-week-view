@@ -67,7 +67,7 @@ class Events extends Component {
     const startMinutes = moment(item.startDate).minutes();
     const totalStartMinutes = (startHours * MINUTES_IN_HOUR) + startMinutes;
     const topOffset = (totalStartMinutes * CONTENT_HEIGHT) / MINUTES_IN_DAY;
-    const height = (moment(item.endDate).diff(item.startDate, 'minutes') * 1920) / MINUTES_IN_DAY;
+    const height = (moment(item.endDate).diff(item.startDate, 'minutes') * CONTENT_HEIGHT) / 480;
     const width = this.getEventItemWidth();
 
     return {
