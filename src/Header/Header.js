@@ -38,10 +38,14 @@ const getDayTextStyles = (numberOfDays) => {
 };
 
 const Column = ({
-  column, numberOfDays, format,
+  column, numberOfDays, format, formatWeekDay, currentDayStyle,
 }) => {
+  const currentDay = column.toISOString().slice(0, 10) === new Date().toISOString().slice(0, 10);
   return (
-    <View style={styles.column}>
+    <View style={currentDay ? [styles.column, currentDayStyle] : styles.column}>
+      <Text style={[styles.text, getDayTextStyles(numberOfDays)]}>
+        {getFormattedDate(column, formatWeekDay)}
+      </Text>
       <Text style={[styles.text, getDayTextStyles(numberOfDays)]}>
         {getFormattedDate(column, format)}
       </Text>
@@ -49,7 +53,9 @@ const Column = ({
   );
 };
 
-const Columns = ({ columns, numberOfDays, format }) => {
+const Columns = ({
+  columns, numberOfDays, format, formatWeekDay, currentDayStyle,
+}) => {
   return (
     <View style={styles.columns}>
       {columns.map((column) => {
@@ -57,7 +63,9 @@ const Columns = ({ columns, numberOfDays, format }) => {
           <Column
             key={column}
             column={column}
+            formatWeekDay={formatWeekDay}
             numberOfDays={numberOfDays}
+            currentDayStyle={currentDayStyle}
             format={format}
           />
         );
@@ -66,26 +74,39 @@ const Columns = ({ columns, numberOfDays, format }) => {
   );
 };
 
-const Title = ({ numberOfDays, selectedDate }) => { // eslint-disable-line react/prop-types
+const Title = ({ numberOfDays, selectedDate, monthYearFormat }) => { // eslint-disable-line react/prop-types
   return (
     <View style={styles.title}>
       <Text
         style={[styles.text, { fontSize: getFontSizeHeader(numberOfDays) }]}
       >
-        {getCurrentMonth(selectedDate)}
+        {getCurrentMonth(selectedDate, monthYearFormat)}
       </Text>
     </View>
   );
 };
 
 const WeekViewHeader = ({
-  numberOfDays, selectedDate, formatDate, style,
+  numberOfDays, selectedDate, formatDate, style, currentDayStyle,
+  monthYearFormat, formatWeekDay,
 }) => {
   const columns = getColumns(numberOfDays, selectedDate);
   return (
     <View style={[styles.container, style]}>
-      <Title numberOfDays={numberOfDays} selectedDate={selectedDate} />
-      {columns && <Columns format={formatDate} columns={columns} numberOfDays={numberOfDays} />}
+      <Title
+        numberOfDays={numberOfDays}
+        selectedDate={selectedDate}
+        monthYearFormat={monthYearFormat}
+      />
+      {columns && (
+      <Columns
+        format={formatDate}
+        currentDayStyle={currentDayStyle}
+        columns={columns}
+        formatWeekDay={formatWeekDay}
+        numberOfDays={numberOfDays}
+      />
+      )}
     </View>
   );
 };
@@ -94,11 +115,13 @@ WeekViewHeader.propTypes = {
   numberOfDays: PropTypes.oneOf([1, 3, 7]).isRequired,
   selectedDate: PropTypes.instanceOf(Date).isRequired,
   formatDate: PropTypes.string,
+  monthYearFormat: PropTypes.string,
   style: PropTypes.object,
 };
 
 WeekViewHeader.defaultProps = {
   formatDate: 'MMM D',
+  monthYearFormat: 'MMMM Y',
 };
 
 export default WeekViewHeader;

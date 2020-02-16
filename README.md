@@ -22,6 +22,11 @@
 ```
 ## Locales customization
 There's a `addLocale` function to add customized locale for component. This component depends on `momentjs`, we can refer to https://momentjs.com/docs/#/customization/ for more information.
+For example, if you want to include Simplified Chinese, you can import Chinese locale from `momentjs` in your main app.
+
+```
+import 'moment/locale/zh-cn';
+```
 
 Example:
 ```
@@ -34,6 +39,100 @@ addLocale('fr', {
   weekdaysShort: 'dim._lun._mar._mer._jeu._ven._sam.'.split('_'),
 });
 ```
+
+## Styling
+
+headerStyle: Applies to all column headers.
+currentDayStyle: Applies to currentDay header.
+
+## Usage:
+
+```
+import React from 'react';
+import {SafeAreaView, StyleSheet, View, Alert, Text} from 'react-native';
+import WeekView from 'react-native-week-view';
+import {i18n} from '../helpers/translate';
+
+const events_data = [
+  {
+    id: 1,
+    description: 'Event',
+    startDate: new Date(),
+    endDate: new Date(),
+    color: 'blue',
+  },
+];
+
+class Schedule extends React.Component {
+  constructor(props) {
+    super(props);
+    this.numOfDays = 3;
+    this.selectedDate = new Date();
+    this.formatWeekDay = 'ddd';
+    this.formatDateHeader = 'MMM D';
+    this.monthYearFormat = 'MMMM YYYY';
+    if (i18n.locale === 'zh') {
+      this.locale = 'zh-cn';
+      this.formatWeekDay = 'ddd';
+      this.formatDateHeader = 'MMMDo';
+      this.monthYearFormat = 'MMMMYYYY';
+    } else {
+      this.locale = i18n.locale;
+    }
+  }
+
+  scrollViewRef = ref => {
+    this.timetableRef = ref;
+  };
+
+  onEventPress = evt => {
+    Alert.alert('onEventPress', JSON.stringify(evt));
+  };
+
+  render() {
+    return (
+      <SafeAreaView style={styles.wrapper}>
+        <View style={styles.container}>
+          <WeekView
+            scrollViewRef={this.scrollViewRef}
+            events={events_data}
+            beginTime={0}
+            endTime={48}
+            selectedDate={this.selectedDate}
+            numberOfDays={this.numOfDays}
+            onEventPress={this.onEventPress}
+            headerStyle={styles.headerStyle}
+            currentDayStyle={styles.currentDayStyle}
+            formatWeekDay={this.formatWeekDay}
+            formatDateHeader={this.formatDateHeader}
+            monthYearFormat={this.monthYearFormat}
+            locale={this.locale}
+          />
+        </View>
+      </SafeAreaView>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+  },
+  headerStyle: {
+    backgroundColor: '#81E1B8',
+  },
+  currentDayStyle: {
+    backgroundColor: '#71C158',
+  },
+  container: {
+    flex: 1,
+    backgroundColor: '#F8F8F8',
+  },
+});
+
+export default Schedule;
+```
+
 ## TODO
 - [x] allow to swipe between weeks or days.
 - [ ] header should be swipeable with columns.

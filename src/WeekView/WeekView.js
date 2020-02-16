@@ -23,7 +23,7 @@ export default class WeekView extends Component {
     };
     this.calendar = null;
     setLocale(props.locale);
-    this.times = this.generateTimes();
+    this.times = this.generateTimes(props.beginTime, props.endTime);
   }
 
   componentDidMount() {
@@ -32,22 +32,19 @@ export default class WeekView extends Component {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.selectedDate) {
-      this.setState({ currentMoment: nextProps.selectedDate });
-    }
-    if (nextProps.locale !== this.props.locale) {
-      setLocale(nextProps.locale);
-    }
-  }
-
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     this.calendar.scrollTo({ y: 0, x: 2 * (SCREEN_WIDTH - 60), animated: false });
+    if (prevProps.selectedDate) {
+      this.props.currentMoment = prevProps.selectedDate;
+    }
+    if (prevProps.locale !== this.props.locale) {
+      setLocale(prevProps.locale);
+    }
   }
 
-  generateTimes = () => {
+  generateTimes = (beginTime, endTime) => {
     const times = [];
-    for (let i = 16; i < 35; i += 1) {
+    for (let i = beginTime; i < endTime; i += 1) {
       const minutes = i % 2 === 0 ? '00' : '30';
       const hour = Math.floor(i / 2);
       const time = `${hour}:${minutes}`;
@@ -96,9 +93,13 @@ export default class WeekView extends Component {
     const {
       numberOfDays,
       headerStyle,
+      currentDayStyle,
+      formatWeekDay,
       formatDateHeader,
+      monthYearFormat,
       onEventPress,
       events,
+      locale,
     } = this.props;
     const { currentMoment } = this.state;
     const dates = this.prepareDates(currentMoment, numberOfDays);
@@ -107,9 +108,13 @@ export default class WeekView extends Component {
         <View style={styles.header}>
           <Header
             style={headerStyle}
+            formatWeekDay={formatWeekDay}
             formatDate={formatDateHeader}
             selectedDate={currentMoment}
             numberOfDays={numberOfDays}
+            currentDayStyle={currentDayStyle}
+            monthYearFormat={monthYearFormat}
+            locale={locale}
           />
         </View>
         <ScrollView>
@@ -153,12 +158,17 @@ export default class WeekView extends Component {
 
 WeekView.propTypes = {
   events: Events.propTypes.events,
-  numberOfDays: PropTypes.oneOf([1, 3, 7]).isRequired,
+  numberOfDays: PropTypes.oneOf([1, 3, 5, 7]).isRequired,
   onSwipeNext: PropTypes.func,
   onSwipePrev: PropTypes.func,
+  beginTime: PropTypes.number,
+  endTime: PropTypes.number,
+  formatWeekDay: PropTypes.string,
   formatDateHeader: PropTypes.string,
+  monthYearFormat: PropTypes.string,
   onEventPress: PropTypes.func,
   headerStyle: PropTypes.object,
+  currentDayStyle: PropTypes.object,
   selectedDate: PropTypes.instanceOf(Date).isRequired,
   locale: PropTypes.string,
 };
@@ -166,4 +176,9 @@ WeekView.propTypes = {
 WeekView.defaultProps = {
   events: [],
   locale: 'en',
+  beginTime: 0,
+  endTime: TIME_LABELS_COUNT,
+  formatWeekDay: 'ddd',
+  formatDateHeader: 'MMMDo',
+  monthYearFormat: 'MMMM Y',
 };
