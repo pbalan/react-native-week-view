@@ -20,6 +20,11 @@
     "react/no-array-index-key": 0,
     "react/destructuring-assignment": 0
   },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
   "plugins": [
     "react"
   ],
